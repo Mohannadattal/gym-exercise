@@ -25,7 +25,7 @@ const HeroBanner = () => {
         variant='contained'
         color='error'
         href='#exercises'
-        sx={{ backgroundColor: '#FF2625', padding: '10px' }}>
+        sx={{ backgroundColor: '#FF2625', padding: '10px', borderRadius:'40px' }}>
         Explore Exercises
       </Button>
       <Typography
@@ -33,7 +33,7 @@ const HeroBanner = () => {
         color='#FF2625'
         sx={{ opacity: 0.1, display: { lg: 'block', xs: 'none' } }}
         fontSize='200px'>
-        Exercise
+        TRAIN HARD
       </Typography>
       <img src={HeroBannerImage} alt='banner' className='hero-banner-img' />
     </Box>

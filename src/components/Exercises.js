@@ -5,13 +5,41 @@ import { exerciseOptions, fetchData } from '../util/fetchData';
 import ExerciseCard from './ExerciseCard';
 
 const Exercises = ({ exercises, setExercises, bodyPart }) => {
- const [currentPage, setCurrentPage] = useState(1)
- const exercisesPerPage = 9
+  const [currentPage, setCurrentPage] = useState(1);
+  const exercisesPerPage = 9;
+  const indexOfLastExercise = currentPage * exercisesPerPage;
+  const indexOfFirstExercise = indexOfLastExercise - exercisesPerPage;
+  const currentExercises = exercises.slice(
+    indexOfFirstExercise,
+    indexOfLastExercise
+  );
 
- const paginate = (e, val) => {
-  setCurrentPage(val)
-  window.sc
- }
+  const paginate = (e, val) => {
+    setCurrentPage(val);
+    window.scrollTo({ top: 1800, behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    const fetchExercisesData = async () => {
+      let exercisesData = [];
+
+      if (bodyPart === 'all') {
+        exercisesData = await fetchData(
+          'https://exercisedb.p.rapidapi.com/exercises',
+          exerciseOptions
+        );
+      } else {
+        exercisesData = await fetchData(
+          `https://exercisedb.p.rapidapi.com/exercises/bodyPart/${bodyPart}`,
+          exerciseOptions
+        );
+      }
+
+      setExercises(exercisesData);
+    };
+
+    fetchExercisesData();
+  }, [bodyPart,setExercises]);
   return (
     <Box id='exercises' sx={{ mt: { lg: '110px' } }} mt='50px' p='20px'>
       <Typography variant='h3' mb='46px'>
@@ -22,7 +50,7 @@ const Exercises = ({ exercises, setExercises, bodyPart }) => {
         sx={{ gap: { lg: '110px', xs: '50px' } }}
         flexWrap='wrap'
         justifyContent='center'>
-        {exercises.map((exercise, index) => (
+        {currentExercises.map((exercise, index) => (
           <ExerciseCard key={index} exercise={exercise} />
         ))}
       </Stack>
@@ -33,8 +61,8 @@ const Exercises = ({ exercises, setExercises, bodyPart }) => {
             shape='rounded'
             count={Math.ceil(exercises.length / exercisesPerPage)}
             page={currentPage}
-        onChange={paginate}
-      size='large'
+            onChange={paginate}
+            size='large'
           />
         )}
       </Stack>
